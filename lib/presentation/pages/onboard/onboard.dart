@@ -3,11 +3,14 @@ import 'package:niko_driweather/presentation/pages/home/home.dart';
 import 'package:niko_driweather/utils/color_palette.dart';
 
 class Onboard extends StatefulWidget {
-  const Onboard({super.key});
+  final VoidCallback onComplete;
+
+  const Onboard({super.key, required this.onComplete});
 
   @override
   _OnboardState createState() => _OnboardState();
 }
+
 
 class _OnboardState extends State<Onboard> with SingleTickerProviderStateMixin {
   late final AnimationController _animationController;
@@ -154,49 +157,50 @@ class _OnboardState extends State<Onboard> with SingleTickerProviderStateMixin {
                   padding:
                   const EdgeInsets.only(bottom: 140.0, left: 50, right: 50),
                   child: AnimatedBuilder(
-                      animation: _bottomAnimation,
-                      builder: (context, child) {
-                        return Transform.translate(
-                          offset: Offset(0, _bottomAnimation.value),
-                          child: child,
-                        );
+                    animation: _bottomAnimation,
+                    builder: (context, child) {
+                      return Transform.translate(
+                        offset: Offset(0, _bottomAnimation.value),
+                        child: child,
+                      );
+                    },
+                    child: ElevatedButton(
+                      onPressed: () {
+                        widget.onComplete();
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Home()));
                       },
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder:(context) => Home()));
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          overlayColor: Colors.black,
-                          elevation: 5,
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 90, vertical: 15),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                        ),
-                        child: const Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              'Get Started',
-                              style: TextStyle(
-                                color: ColorPalette.textDark,
-                                fontSize: 16,
-                              ),
-                            ),
-                            SizedBox(width: 8), //
-                            Icon(
-                              Icons.arrow_forward_ios_outlined,
-                              color: ColorPalette.textDark,
-                              size: 16,
-                            ),
-                          ],
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        overlayColor: Colors.black,
+                        elevation: 5,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 90, vertical: 15),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
                         ),
                       ),
+                      child: const Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            'Get Started',
+                            style: TextStyle(
+                              color: ColorPalette.textDark,
+                              fontSize: 16,
+                            ),
+                          ),
+                          SizedBox(width: 8),
+                          Icon(
+                            Icons.arrow_forward_ios_outlined,
+                            color: ColorPalette.textDark,
+                            size: 16,
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ))
           ],
