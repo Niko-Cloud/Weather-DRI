@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:niko_driweather/presentation/pages/details/weather_details.dart';
 import 'package:niko_driweather/presentation/pages/home/notification.dart';
+import 'package:niko_driweather/presentation/pages/onboard/onboard.dart';
 import 'package:niko_driweather/utils/color_palette.dart';
 import 'package:niko_driweather/utils/constant.dart';
 

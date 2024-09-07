@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:niko_driweather/presentation/pages/home/home.dart';
+import 'package:niko_driweather/presentation/pages/onboard/onboard.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -19,7 +20,7 @@ class AppView extends StatelessWidget {
       theme: ThemeData(
         fontFamily: 'Overpass',
       ),
-      home: const Home(),
+      home: const Onboard(),
     );
   }
 }
