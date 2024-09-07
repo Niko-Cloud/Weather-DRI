@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:niko_driweather/presentation/pages/home/notification_tile.dart';
 import 'package:niko_driweather/utils/color_palette.dart';
 
 class NotificationModal extends StatelessWidget {
@@ -44,29 +45,42 @@ class NotificationModal extends StatelessWidget {
                 Text(
                   'New',
                   style: TextStyle(
-                    fontSize: 18,
+                    fontSize: 12,
                     color: ColorPalette.textDark,
                   ),
                 ),
-                ListTile(
-                  leading: Icon(Icons.notifications),
-                  title: Text('Notification 1'),
+                NotificationListTile(
+                  textNotification: "A sunny day in your location, consider wearing your UV protection",
+                  textTime: '10 minutes ago',
+                  icon: ImageIcon(AssetImage(
+                      'assets/img/sun.png'
+                  )),
                 ),
                 Text(
                   'Earlier',
                   style: TextStyle(
-                    fontSize: 18,
+                    fontSize: 12,
                     color: ColorPalette.textDark,
                   ),
                 ),
-                ListTile(
-                  leading: Icon(Icons.notifications),
-                  title: Text('Notification 2'),
+                NotificationListTile(
+                  textNotification: "A cloudy day will occur all day long, don't worry about the heat of the sun",
+                  textTime: '1 day ago',
+                  icon: ImageIcon(AssetImage(
+                      'assets/img/wind.png'
+                  )),
                 ),
-                // Add more notifications here
+                NotificationListTile(
+                  textNotification: "Potential for rain today is 84%, don't forget to bring your umbrella.",
+                  textTime: '2 days ago',
+                  icon: ImageIcon(AssetImage(
+                      'assets/img/raini.png'
+                  )),
+                ),
               ],
             ),
           ),
+
           SizedBox(height: 16),
         ],
       ),
