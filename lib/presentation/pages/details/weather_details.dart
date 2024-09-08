@@ -148,10 +148,10 @@ class _WeatherDetailsState extends State<WeatherDetails> {
                               (index) => HourlyDetails(
                                   index: index,
                                   currentHour: formatTime(
-                                      weatherHourlyEntities[index]!.time!),
+                                      weatherHourlyEntities[index].time!),
                                   temperature:
-                                      weatherHourlyEntities[index]!.temperature,
-                                  weatherCode: weatherHourlyEntities[index]!
+                                      weatherHourlyEntities[index].temperature,
+                                  weatherCode: weatherHourlyEntities[index]
                                       .weatherCode)),
                         ),
                         const Spacer(),

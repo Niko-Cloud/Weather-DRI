@@ -28,7 +28,7 @@ class Home extends StatelessWidget {
             child: SafeArea(
               child: Padding(
                 padding: const EdgeInsets.all(24.0),
-                child: FutureBuilder<Map<String, dynamic?>>(
+                child: FutureBuilder<Map<String, dynamic>>(
                   future: getLocation(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
