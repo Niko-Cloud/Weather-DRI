@@ -1,13 +1,13 @@
 import 'package:equatable/equatable.dart';
 
-import '../../data/entity/weather_entity.dart';
+import '../entities/weather_entity.dart';
 
 class WeatherModel extends Equatable {
   final String weatherCode;
   final String temperature;
   final String humidity;
   final String windSpeed;
-  final String time;
+  final DateTime time;
 
   const WeatherModel({
     required this.weatherCode,
@@ -23,7 +23,7 @@ class WeatherModel extends Equatable {
       temperature: entity.temperature,
       humidity: entity.humidity,
       windSpeed: entity.windSpeed,
-      time: entity.time,
+      time: entity.time!,
     );
   }
 

@@ -4,7 +4,7 @@ import 'package:geocoding/geocoding.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:dio/dio.dart';
-import 'package:niko_driweather/data/local/shared_pref.dart';
+import 'package:niko_driweather/presentation/pages/home/home.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -25,7 +25,26 @@ class _WeatherMapPageState extends State<WeatherMapPage> {
   void initState() {
     super.initState();
     _mapController = MapController();
-    _checkPermissionAndGetLocation();
+    _loadSavedData();
+  }
+
+  Future<void> _loadSavedData() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    final latitude = prefs.getDouble('latitude');
+    final longitude = prefs.getDouble('longitude');
+    final location = prefs.getString('location');
+    final recentSearches = prefs.getStringList('recentSearches') ?? [];
+
+    if (latitude != null && longitude != null) {
+      setState(() {
+        _currentLocation = LatLng(latitude, longitude);
+        _searchController.text = location ?? '';
+        _recentSearches = recentSearches;
+      });
+
+      _mapController.move(_currentLocation, 13);
+    }
   }
 
   Future<void> _checkPermissionAndGetLocation() async {
@@ -92,10 +111,8 @@ class _WeatherMapPageState extends State<WeatherMapPage> {
 
       final latt = data['latt'];
       final longt = data['longt'];
-      final locationName = data['city'];
-
-      saveLocation(double.parse(latt.toString()), double.parse(longt.toString()), locationName.toString());
-
+      final locationName = data['standard']['city'];
+      print("location name : $locationName");
 
       if (latt != null && longt != null) {
         setState(() {
@@ -105,6 +122,12 @@ class _WeatherMapPageState extends State<WeatherMapPage> {
           if (_recentSearches.length > 5) _recentSearches.removeLast();
         });
         _mapController.move(_currentLocation, 13);
+
+        final SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setDouble('latitude', _currentLocation.latitude);
+        await prefs.setDouble('longitude', _currentLocation.longitude);
+        await prefs.setString('location', locationName);
+        await prefs.setStringList('recentSearches', _recentSearches);
       }
     } catch (e) {
       print('Error fetching location: $e');
@@ -139,6 +162,11 @@ class _WeatherMapPageState extends State<WeatherMapPage> {
     );
   }
 
+  void _setLocation() {
+    Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (context) => Home()));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -149,7 +177,7 @@ class _WeatherMapPageState extends State<WeatherMapPage> {
               mapController: _mapController,
               options: MapOptions(
                 initialCenter: _currentLocation,
-                initialZoom: 9.2,
+                initialZoom: 13.0,
               ),
               children: [
                 TileLayer(
@@ -197,6 +225,17 @@ class _WeatherMapPageState extends State<WeatherMapPage> {
                       ),
                     ],
                   ),
+                ),
+              ),
+            ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: FloatingActionButton.extended(
+                  onPressed: _setLocation,
+                  icon: Icon(Icons.location_on),
+                  label: Text('Set Location'),
                 ),
               ),
             ),

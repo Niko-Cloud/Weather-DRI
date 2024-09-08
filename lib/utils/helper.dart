@@ -8,6 +8,14 @@ DateTime now = DateTime.now().toUtc().add(const Duration(hours: 7));
 String formattedDate = DateFormat('dd MMMM').format(now);
 String formattedDateShort = DateFormat('d, MMM').format(now);
 
+String formatTime(DateTime dateTime) {
+  return DateFormat('HH:mm').format(dateTime);
+}
+
+String formatDate(DateTime dateTime) {
+  return DateFormat('dd, MMM').format(dateTime);
+}
+
 Future<void> getCurrentLocation() async {
   try {
     Position position = await Geolocator.getCurrentPosition(
@@ -16,7 +24,6 @@ Future<void> getCurrentLocation() async {
       ),
     );
 
-    // Save the location data to SharedPreferences
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setDouble('latitude', position.latitude);
     await prefs.setDouble('longitude', position.longitude);

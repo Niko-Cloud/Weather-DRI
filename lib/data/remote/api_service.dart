@@ -39,7 +39,7 @@ Future<Map<String, dynamic>?> getWeatherDataRealtime(double latitude, double lon
     if (response.statusCode == 200) {
       final weatherData = response.data;
       print('Weather Data: $weatherData');
-      return weatherData; // Return the data
+      return weatherData;
     } else {
       print('Failed to load weather data. Status code: ${response.statusCode}');
       return null;

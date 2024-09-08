@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
 
 import '../../../utils/color_palette.dart';
-import '../../../utils/constant.dart';
 
 class DailyDetails extends StatelessWidget {
-  const DailyDetails({Key? key}) : super(key: key);
+  final String date;
+  final String temperature;
+  final String weatherCode;
+
+  const DailyDetails(
+      {Key? key,
+        required this.date,
+        required this.temperature,
+        required this.weatherCode})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +25,7 @@ class DailyDetails extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              formattedDateShort,
+              date,
               style: TextStyle(fontSize: 20, color: Colors.white, shadows: [
                 BoxShadow(
                   color: ColorPalette.shadow,
@@ -28,13 +36,13 @@ class DailyDetails extends StatelessWidget {
             ),
             Spacer(),
             Image(
-              image: AssetImage('assets/img/sunny Cloudy.png'),
+              image: AssetImage('assets/img/weather_code/${weatherCode}.png'),
               width: 80,
               height: 50,
             ),
             Spacer(),
             Text(
-              "24°C",
+              "$temperature°C",
               style: TextStyle(fontSize: 20, color: Colors.white, shadows: [
                 BoxShadow(
                   color: ColorPalette.shadow,

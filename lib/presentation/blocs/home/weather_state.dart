@@ -13,8 +13,11 @@ class WeatherLoading extends WeatherState {}
 
 class WeatherLoaded extends WeatherState {
   final WeatherEntity? weather;
+  final List<WeatherEntity?> weatherList;
+  final List<WeatherEntity> weatherListHourly;
+  final List<WeatherEntity> weatherListDaily;
 
-  const WeatherLoaded({this.weather});
+  const WeatherLoaded({this.weather, this.weatherList = const [], this.weatherListHourly = const [], this.weatherListDaily = const []});
 
   @override
   List<Object> get props => [weather ?? ''];

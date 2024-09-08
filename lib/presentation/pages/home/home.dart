@@ -5,8 +5,8 @@ import 'package:niko_driweather/presentation/pages/details/weather_details.dart'
 import 'package:niko_driweather/presentation/pages/location/location.dart';
 import 'package:niko_driweather/presentation/pages/home/notification.dart';
 import 'package:niko_driweather/utils/color_palette.dart';
-import 'package:niko_driweather/utils/constant.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:niko_driweather/utils/helper.dart';
+import 'package:niko_driweather/utils/weather_condition_help.dart';
 
 import '../../../data/local/shared_pref.dart';
 
@@ -42,7 +42,8 @@ class Home extends StatelessWidget {
                       final loc = location['location'];
 
                       if (latitude != null && longitude != null) {
-                        context.read<WeatherBloc>().add(FetchWeather(latitude: latitude, longitude: longitude));
+                        context.read<WeatherBloc>().add(FetchWeather(
+                            latitude: latitude, longitude: longitude));
                       } else {
                         return const Text('Location not found.');
                       }
@@ -68,9 +69,17 @@ class Home extends StatelessWidget {
                                     GestureDetector(
                                       onTap: () {
                                         Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) => WeatherMapPage()));
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                WeatherMapPage(),
+                                          ),
+                                        ).then((_) {
+                                          context.read<WeatherBloc>().add(
+                                              FetchWeather(
+                                                  latitude: latitude,
+                                                  longitude: longitude));
+                                        });
                                       },
                                       child: Row(
                                         children: [
@@ -111,7 +120,8 @@ class Home extends StatelessWidget {
                                           );
                                         },
                                         child: const Image(
-                                          image: AssetImage('assets/img/notification_on.png'),
+                                          image: AssetImage(
+                                              'assets/img/notification_on.png'),
                                         ),
                                       ),
                                     ),
@@ -139,7 +149,8 @@ class Home extends StatelessWidget {
                                       child: Padding(
                                         padding: const EdgeInsets.all(12.0),
                                         child: Column(
-                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
                                           children: [
                                             Text(
                                               'Today $formattedDate',
@@ -160,14 +171,17 @@ class Home extends StatelessWidget {
                                               text: TextSpan(
                                                 children: [
                                                   TextSpan(
-                                                    text: '${weather?.temperature}',
+                                                    text:
+                                                        '${weather?.temperature}',
                                                     style: TextStyle(
                                                       fontSize: 90,
                                                       color: Colors.white,
                                                       shadows: [
                                                         Shadow(
-                                                          color: Colors.black.withOpacity(0.6),
-                                                          offset: const Offset(-9, 8),
+                                                          color: Colors.black
+                                                              .withOpacity(0.6),
+                                                          offset: const Offset(
+                                                              -9, 8),
                                                           blurRadius: 130,
                                                         ),
                                                       ],
@@ -180,8 +194,10 @@ class Home extends StatelessWidget {
                                                       color: Colors.white,
                                                       shadows: [
                                                         Shadow(
-                                                          color: Colors.black.withOpacity(0.6),
-                                                          offset: const Offset(-9, 8),
+                                                          color: Colors.black
+                                                              .withOpacity(0.6),
+                                                          offset: const Offset(
+                                                              -9, 8),
                                                           blurRadius: 130,
                                                         ),
                                                       ],
@@ -191,36 +207,55 @@ class Home extends StatelessWidget {
                                               ),
                                             ),
                                             const Spacer(),
-                                            Text(
-                                              // '${weather?.weatherDescription}',
-                                              'sunyy',
-                                              style: const TextStyle(
-                                                fontSize: 24,
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.w600,
-                                                shadows: [
-                                                  Shadow(
-                                                    color: ColorPalette.shadow,
-                                                    offset: Offset(-2, 3),
-                                                    blurRadius: 2,
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
+                                            FutureBuilder<Map<String, String>>(
+                                                future:
+                                                    loadWeatherCodesFromJson(),
+                                                builder: (context, snapshot) {
+                                                  if (snapshot.hasData) {
+                                                    final weatherCodes =
+                                                        snapshot.data!;
+                                                    return Text(
+                                                      weatherCodes[weather!
+                                                              .weatherCode] ??
+                                                          'Unknown Weather',
+                                                      style: const TextStyle(
+                                                        fontSize: 24,
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        shadows: [
+                                                          Shadow(
+                                                            color: ColorPalette
+                                                                .shadow,
+                                                            offset:
+                                                                Offset(-2, 3),
+                                                            blurRadius: 2,
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    );
+                                                  } else {
+                                                    return const Text(
+                                                        'Unknown Weather');
+                                                  }
+                                                }),
                                             const Spacer(),
                                             Row(
-                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
                                               children: [
                                                 Column(
                                                   children: [
                                                     ImageIcon(
-                                                      AssetImage('assets/img/wind.png'),
+                                                      AssetImage(
+                                                          'assets/img/wind.png'),
                                                       color: Colors.white,
                                                       size: 24,
                                                     ),
                                                     SizedBox(height: 16),
                                                     ImageIcon(
-                                                      AssetImage('assets/img/humid.png'),
+                                                      AssetImage(
+                                                          'assets/img/humid.png'),
                                                       color: Colors.white,
                                                       size: 24,
                                                     ),
@@ -236,8 +271,10 @@ class Home extends StatelessWidget {
                                                         color: Colors.white,
                                                         shadows: [
                                                           Shadow(
-                                                            color: ColorPalette.shadow,
-                                                            offset: Offset(-2, 3),
+                                                            color: ColorPalette
+                                                                .shadow,
+                                                            offset:
+                                                                Offset(-2, 3),
                                                             blurRadius: 2,
                                                           ),
                                                         ],
@@ -251,8 +288,10 @@ class Home extends StatelessWidget {
                                                         color: Colors.white,
                                                         shadows: [
                                                           Shadow(
-                                                            color: ColorPalette.shadow,
-                                                            offset: Offset(-2, 3),
+                                                            color: ColorPalette
+                                                                .shadow,
+                                                            offset:
+                                                                Offset(-2, 3),
                                                             blurRadius: 2,
                                                           ),
                                                         ],
@@ -282,8 +321,10 @@ class Home extends StatelessWidget {
                                                 ),
                                                 SizedBox(width: 10),
                                                 Column(
-                                                  mainAxisAlignment: MainAxisAlignment.center,
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
                                                   children: [
                                                     Text(
                                                       "${weather?.windSpeed} km/h",
@@ -292,8 +333,10 @@ class Home extends StatelessWidget {
                                                         color: Colors.white,
                                                         shadows: [
                                                           Shadow(
-                                                            color: ColorPalette.shadow,
-                                                            offset: Offset(-2, 3),
+                                                            color: ColorPalette
+                                                                .shadow,
+                                                            offset:
+                                                                Offset(-2, 3),
                                                             blurRadius: 2,
                                                           ),
                                                         ],
@@ -307,8 +350,10 @@ class Home extends StatelessWidget {
                                                         color: Colors.white,
                                                         shadows: [
                                                           Shadow(
-                                                            color: ColorPalette.shadow,
-                                                            offset: Offset(-2, 3),
+                                                            color: ColorPalette
+                                                                .shadow,
+                                                            offset:
+                                                                Offset(-2, 3),
                                                             blurRadius: 2,
                                                           ),
                                                         ],
@@ -341,7 +386,11 @@ class Home extends StatelessWidget {
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                              builder: (context) => WeatherDetails()));
+                                              builder: (context) =>
+                                                  WeatherDetails(
+                                                    latitude: latitude,
+                                                    longitude: longitude,
+                                                  )));
                                     },
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: Colors.white,
